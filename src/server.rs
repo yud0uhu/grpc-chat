@@ -1,8 +1,11 @@
-use tonic::{transport::Server, Request, Response, Status};
+use std::{env, net::SocketAddr};
 
-use hello_world::greeter_server::{Greeter, GreeterServer};
-use hello_world::{HelloReply, HelloRequest};
+use tonic::{async_trait, transport::Server, Request, Response, Status};
 
+use hello_world::{
+    greeter_server::{Greeter, GreeterServer},
+    HelloReply, HelloRequest,
+};
 pub mod hello_world {
     tonic::include_proto!("helloworld"); // The string specified here must match the proto package name
 }
@@ -27,7 +30,7 @@ impl Greeter for MyGreeter {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr: SocketAddr = ([0, 0, 0, 0], 4001).into();
     let greeter = MyGreeter::default();
 
     println!("GreeterServer listening on {}", addr);
