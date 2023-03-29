@@ -1,23 +1,27 @@
 [package]
-name = "my-blog"
+name = "grpc-chat"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[[bin]] # Bin to run the HelloWorld gRPC server
+[[bin]] # Bin to run the Chat gRPC server
 name = "server"
 path = "src/server.rs"
 
-[[bin]] # Bin to run the HelloWorld gRPC client
-name = "client"
-path = "src/client.rs"
+# [[bin]] # Bin to run the Chat gRPC client
+# name = "client"
+# path = "src/graphql-getway.rs"
 
 [dependencies]
 tonic = "0.8"
 prost = "0.11"
 tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
 async-graphql = "5.0.6"
+futures = "0.3"
+futures-core = "0.3"
+futures-util = "0.3"
+tokio-stream = "0.1"
 
 [build-dependencies]
 tonic-build = "0.8"
