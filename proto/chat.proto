@@ -15,5 +15,5 @@ message Empty {}
 
 service ChatReq {
     rpc ConnectServer (Req) returns (stream Msg);
-    rpc SendMsg (Msg) returns (Empty);
+    rpc SendMsg (Msg) returns (Msg);
 }

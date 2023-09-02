@@ -94,13 +94,14 @@ impl ChatReq for ChatService {
             tokio_stream::wrappers::ReceiverStream::new(stream_rx),
         )))
     }
-    async fn send_msg(&self, request: Request<Msg>) -> Result<Response<Empty>, Status> {
+
+    async fn send_msg(&self, request: Request<Msg>) -> Result<Response<Msg>, Status> {
         let req_data = request.into_inner();
         let user_name = req_data.user_name;
         let content = req_data.content;
         let msg = Msg { user_name, content };
 
-        Ok(Response::new(Empty {}))
+        Ok(Response::new(msg))
     }
 }
 
