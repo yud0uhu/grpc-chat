@@ -1,10 +1,10 @@
-use futures::Stream; // 非同期ストリームを実装するために使用
-use std::collections::HashMap; // キーと値のペアを格納するため使用
-use std::pin::Pin; // 大きなデータ構造を保持するために使用される非同期のピン留めポインタ
-use std::sync::Arc; // スレッドセーフな参照カウントを提供
-use tokio::sync::{mpsc, RwLock}; // 非同期通信を可能にするマルチプロデューサ/マルチコンシューマのチャンネル、非同期的にアクセス可能な読み取り.書き込み可能なロックを提供
-use tonic::transport::Server; // gRPCサーバーの開始と停止を行うために使用
-use tonic::{Request, Response, Status}; // gRPCのリクエスト、レスポンス、ステータスを定義するために使用される
+use futures::Stream;
+use std::collections::HashMap;
+use std::pin::Pin;
+use std::sync::Arc;
+use tokio::sync::{mpsc, RwLock};
+use tonic::transport::Server;
+use tonic::{Request, Response, Status};
 
 use chat::{
     chat_req_server::{ChatReq, ChatReqServer},
@@ -12,12 +12,8 @@ use chat::{
 };
 
 pub mod chat {
-    tonic::include_proto!("chat"); // The string specified here must match the proto package name
-}
+    tonic::include_proto!("chat"); /
 
-// 複数のユーザーによって共有されるチャットメッセージを管理するために使用する
-// ユーザー名をキーに、mpsc::Sender<Msg>を値として持つHashMap
-//
 #[derive(Debug)]
 struct Shared {
     senders: HashMap<String, mpsc::Sender<Msg>>,
@@ -62,7 +58,6 @@ impl ChatReq for ChatService {
     type ConnectServerStream =
         Pin<Box<dyn Stream<Item = Result<Msg, Status>> + Send + Sync + 'static>>;
 
-    // クライアントからの接続要求があった場合に、サーバーがクライアントに送信するためのストリームを作成して返す
     async fn connect_server(
         &self,
         request: Request<Req>,
@@ -70,10 +65,8 @@ impl ChatReq for ChatService {
         let name = request.into_inner().user_name;
         let (stream_tx, stream_rx) = mpsc::channel(1); // Fn usage
 
-        // クライアントからの接続要求があった場合に、サーバーがクライアントに送信するためのストリームを作成して返却する
         let (tx, mut rx) = mpsc::channel(1);
         {
-            // sendersマップに新しい接続のためのmpsc::Senderを追加する
             self.shared.write().await.senders.insert(name.clone(), tx);
         }
 
